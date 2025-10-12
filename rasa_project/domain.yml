@@ -1,0 +1,38 @@
+version: "3.1"
+
+intents:
+  - affirm
+  - ask_help
+  - cancel
+  - deny
+  - escalate
+  - greet
+  - report_problem
+  - smalltalk
+
+slots:
+  mood:
+    type: categorical
+    values: [friendly, concerned]
+    influence_conversation: true
+
+responses:
+  utter_greet__friendly:
+    - text: "Hi there! I’m here and happy to help."
+  utter_greet__concerned:
+    - text: "I’m with you—let’s take this step by step."
+
+  utter_ask_problem:
+    - text: "Could you tell me a bit more about what went wrong?"
+
+actions:
+  - action_mood_tick
+  - action_utter_mooded
+  - action_greet
+  - action_offer_help
+  - action_collect_details
+  - action_escalate
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

@@ -1,0 +1,32 @@
+moods:
+  - name: friendly
+    enter_animation: wave_small
+    idle_loop: breathe_calm
+    enables:
+      intents: [greet, ask_help, smalltalk, affirm, deny]
+      actions: [action_greet, action_offer_help]
+    weights:
+      actions: { action_greet: 1.4, action_offer_help: 1.2 }
+    transitions:
+      - when: user_sentiment < -0.3
+        to: concerned
+        side_effects:
+          - emit_animation: brow_furrow
+
+  - name: concerned
+    enter_animation: lean_in
+    idle_loop: breathe_fast
+    enables:
+      intents: [report_problem, cancel, escalate]
+      actions: [action_collect_details, action_escalate]
+    masks:
+      intents: [smalltalk]
+    transitions:
+      - when: issue_resolved == true
+        to: friendly
+
+signals:
+  - name: user_sentiment
+    type: float
+  - name: issue_resolved
+    type: bool

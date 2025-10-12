@@ -1,0 +1,27 @@
+version: "3.1"
+rules:
+  - rule: Allow eligible actions in mood friendly
+    condition:
+      - slot_was_set:
+          - mood: "friendly"
+    steps:
+      - action: action_mood_tick
+      - or:
+          - action: action_greet
+          - action: action_offer_help
+
+  - rule: Allow eligible actions in mood concerned
+    condition:
+      - slot_was_set:
+          - mood: "concerned"
+    steps:
+      - action: action_mood_tick
+      - or:
+          - action: action_collect_details
+          - action: action_escalate
+
+
+- rule: Greet response varies by mood
+  steps:
+    - intent: greet
+    - action: action_utter_mooded
