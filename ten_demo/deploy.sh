@@ -55,6 +55,23 @@ if [ -f .gitmodules ]; then
     git submodule update --init --recursive || true
 fi
 
+echo "Checking TEN framework..."
+if [ ! -d "ten_demo/ten-framework" ]; then
+    echo "TEN framework not found, cloning..."
+    cd ten_demo
+    git clone https://github.com/TEN-framework/ten-framework.git
+    cd ..
+fi
+
+# Initialize ten-framework if it's a git repo but not initialized
+if [ -d "ten_demo/ten-framework/.git" ]; then
+    echo "TEN framework is a git repo, updating..."
+    cd ten_demo/ten-framework
+    git fetch origin
+    git reset --hard origin/main || git reset --hard origin/master || true
+    cd ../..
+fi
+
 echo "Navigating to TEN demo directory..."
 cd ten_demo/ten-framework/ai_agents/agents/examples/local-demo
 
