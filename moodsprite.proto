@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package moodsprite;
+
+// Empty message for requests that don't need parameters
+message Empty {}
+
+// Keyframes are specific character images. Each one currently consists
+// of the character, standing torso-up, against a transparent background.
+// Keyframes will be overlaid over backgrounds.
+message SpriteKeyframe {
+  string uuid = 1;          // Gets "frozen" on disk using versions (every version has new)
+  string description = 2;  // e.g., "slightly smiling"
+  bytes image_data = 3;    // base64-encoded, gzipped PNG
+}
+
+// When the server is live, it'll stream real-time cues to the frontend to change the posture,
+// behavior, or other expression of the sprite. I'm starting out super simple but we'll hopefully
+// add things like blinking and separate body gestures / facial expressions later!
+// 
+message LiveSpriteKeyframeCue {
+  google.protobuf.Timestamp timestamp = 1;  // Timestamp at which the cue was emitted, and from which it is valid
+  optional uint32 duration_valid_ms = 2; // uint32 for duration in milliseconds
+  optional SpriteMood new_mood = 3;  // If applicable, the change of mood for the sprite.
+  string keyframe_uuid = 4;     // What keyframe is being invoked. Must be associated to the specified SpriteMood or we'll error.
+  string explanation = 5; // Free text for troubleshooting / to explain ourselves to the other person (procedurally generated / legible by NLP)
+  optional string alt_cue_text = 6;  // If the cue is being used "off label" we'll declare it -- for example, if we're reusing a previous "standalone" cue to convey something else as part of a longer sequence
+}
+
+// When playing recordings, we'll send a separate type
+message RecordedSpriteKeyframeCue {
+  optional uint32 recording_time_ms = 1; // uint32 for recording time in milliseconds
+  SpriteKeyframe keyframe = 2; // 
+  string explanation = 5; // Free text for troubleshooting / to explain ourselves to the other person (procedurally generated / legible by NLP)
+  optional string alt_cue_text = 6;  // If the cue is being used "off label" we'll declare it -- for example, if we're reusing a previous "standalone" cue to convey something else as part of a longer sequence
+}
+
+// Moods correspond to modulation of the underlying Rasa chatbot's behavior, and so the
+// primary goal of this repository is to convey mood in a human-recognizable way, so that
+// the agent can feel trustworthy / attempt to interact in "human-like" ways.
+// For now a mood is a set of keyframes, but at some point it might bring along local
+// models
+// in-memory object in which every `keyframe` is indexed by its `mood`.
+// This is because I think that's the OOP truth of the matter; I'm going to try for
+// gestural specificity to the agent's mood. To a substantial degree, I think that
+// telegraphing mood without saying it is the underlying purpose of this library;
+// what's interesting will be auditing our own declarations for trustworthiness and
+// seeing how we can enforce standards of decency about truly telegraphing intent.
+// So keyframes serve as expressions which convey the mood while also aligning with.
+message SpriteMood {
+    string uuid = 1;  // assumed unique
+    string description = 2;         // e.g., "helpful, open, having newly met the user and coming in with warmth and positive expectations."
+  repeated SpriteKeyframe keyframes = 3;  // All keyframes for this mood (assumed unique to moods)
+  optional string notes = 4; // Only visible to developers / in the log
+}
+
+
+// Humans can play the part of the sprite -- I'm going to do this in my personal agent, and I
+// think it'll be useful for Sera as well. I imagine saving explanatory statements we can reuse
+// across early sessions with the idle curious on the Internet, which I think should save us a lot
+// of OpenAI chat completion and also hopefully serve as continuing "nuggets of humanity" within
+// the agent's personality (which I expect will otherwise feel pretty dry).
+// I'm going to hand-roll the first recordings -- I'll take them on my Scarlett 2i2 and associate
+// keyframes to them arbitrarily / "by hand" (asking an LLM to do it) -- but gosh it'd be really
+// neat to capture them with video processing or mocap, wouldn't it?
+message SpriteRecording {
+  string uuid = 1;
+  string transcript = 2; // Transcript of the associated audio
+  bytes audio_data = 3; // TODO pick a format
+  repeated RecordedSpriteKeyframeCue cues = 4;  // "inflated" into a `LiveSpriteKeyframeCue` on serve
+  optional string notes = 5;
+}
+
+// Sprites retain the right to evolve, and when they do, they'll reload on the client side
+// (invalidating the sprite keyframe cache which I hope to keep). I also hope for sprites to
+// be able to automatically explain their own changelog.
+// We're invalidating the whole sprite cache when we see a new semver -- no need to be fancy.
+message SpriteCharacterVersion {
+  string name = 1;
+  SpriteKeyframe subject_image = 2;  // the subject image, likely also the base keyframe image 
+  repeated SpriteMood moods = 3;
+  repeated SpriteRecording recordings = 4;
+  optional string notes = 5;
+  optional string changelog = 6; // natural language, to be explained in one loop
+}
+
+// The latest version of a sprite, constituting our main "get all keyframes we're going to use" endpoint
+message SpriteCharacter {
+  string semantic_version = 1;
+  SpriteCharacterVersion character = 2;
+}
+
+/*
+Sometimes 
+*/
+message SpriteCharacterHistory {
+  string current_name = 1;
+  string latest_version = 2;
+  repeated SpriteCharacterVersion versions = 3;
+}
+
+// Various aspects of history we might want to do:
+// - Reconstruct the entire history;
+// - Request 
+message GetHistoryRequest {
+  message FetchAllVersions {
+    bool include_data = 1;
+  }
+
+  optional string intent = 1; // NLP, for our analysis / user feedback
+  // reserved: space for more metadata / flags
+  oneof request_type {
+    FetchAllVersions fetch_all = 10;
+    string specific_version_to_fetch = 11; // always includes assets
+    // probably filter/search criteria coming here
+  }
+}
+
+
+// To run a moodsprite 
+service MoodspriteService {
+  // Get all available keyframes as gzipped base64-encoded images
+  rpc GetCharacter(Empty) returns (SpriteCharacter);
+
+  
+  rpc StartSession(Empty) returns (stream LiveSpriteKeyframeCue);
+
+  // This probably won't be needed at the outset -- but I figure we
+  // might as well include it -- I'm still not sure if we'll move
+  // off-disk
+  rpc GetCharacterHistory(GetHistoryRequest) returns (SpriteCharacterHistory);
+}

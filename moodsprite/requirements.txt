@@ -1,0 +1,14 @@
+# Dependencies for Moodsprite gRPC Server
+grpcio>=1.60.0
+grpcio-tools>=1.60.0
+Pillow>=10.0.0
+PyYAML>=6.0
+
+# Dependencies for Sera Keyframe Generator with InstantCharacter
+torch>=2.0.0
+torchvision>=0.15.0
+transformers>=4.30.0
+diffusers>=0.20.0
+accelerate>=0.20.0
+huggingface-hub>=0.16.0
+

@@ -1,0 +1,80 @@
+{
+  "helpful": [
+    {
+      "filepath": "/Users/jade/Git/moodsprite/sera/keyframes/generated/sera_helpful_variant_01_slightly_smiling.png",
+      "cue": "slightly smiling",
+      "variant_index": 0,
+      "mood": "helpful"
+    },
+    {
+      "filepath": "/Users/jade/Git/moodsprite/sera/keyframes/generated/sera_helpful_variant_02_smiling.png",
+      "cue": "smiling",
+      "variant_index": 1,
+      "mood": "helpful"
+    },
+    {
+      "filepath": "/Users/jade/Git/moodsprite/sera/keyframes/generated/sera_helpful_variant_03_smiling_broadly.png",
+      "cue": "smiling broadly",
+      "variant_index": 2,
+      "mood": "helpful"
+    },
+    {
+      "filepath": "/Users/jade/Git/moodsprite/sera/keyframes/generated/sera_helpful_variant_04_waving_hello_hand_to_the_left.png",
+      "cue": "waving hello, hand to the left",
+      "variant_index": 3,
+      "mood": "helpful"
+    },
+    {
+      "filepath": "/Users/jade/Git/moodsprite/sera/keyframes/generated/sera_helpful_variant_05_waving_hello_hand_to_the_right.png",
+      "cue": "waving hello, hand to the right",
+      "variant_index": 4,
+      "mood": "helpful"
+    }
+  ],
+  "skeptical": [
+    {
+      "filepath": "/Users/jade/Git/moodsprite/sera/keyframes/generated/sera_skeptical_variant_01_slightly_smiling_with_a_distant_look_in_the_eyes.png",
+      "cue": "slightly smiling with a distant look in the eyes",
+      "variant_index": 0,
+      "mood": "skeptical"
+    },
+    {
+      "filepath": "/Users/jade/Git/moodsprite/sera/keyframes/generated/sera_skeptical_variant_02_frowning_slightly.png",
+      "cue": "frowning slightly",
+      "variant_index": 1,
+      "mood": "skeptical"
+    },
+    {
+      "filepath": "/Users/jade/Git/moodsprite/sera/keyframes/generated/sera_skeptical_variant_03_looking_away_with_a_slightly_furrowed_brow.png",
+      "cue": "looking away with a slightly furrowed brow",
+      "variant_index": 2,
+      "mood": "skeptical"
+    },
+    {
+      "filepath": "/Users/jade/Git/moodsprite/sera/keyframes/generated/sera_skeptical_variant_04_looking_directly_at_the_camera_with_a_slightly_furrowed_brow_and_a_look_of_concern.png",
+      "cue": "looking directly at the camera with a slightly furrowed brow and a look of concern",
+      "variant_index": 3,
+      "mood": "skeptical"
+    }
+  ],
+  "sad": [
+    {
+      "filepath": "/Users/jade/Git/moodsprite/sera/keyframes/generated/sera_sad_variant_01_looking_deflated.png",
+      "cue": "looking deflated",
+      "variant_index": 0,
+      "mood": "sad"
+    },
+    {
+      "filepath": "/Users/jade/Git/moodsprite/sera/keyframes/generated/sera_sad_variant_02_looking_about_to_cry.png",
+      "cue": "looking about to cry",
+      "variant_index": 1,
+      "mood": "sad"
+    },
+    {
+      "filepath": "/Users/jade/Git/moodsprite/sera/keyframes/generated/sera_sad_variant_03_looking_dejectedly_at_the_camera.png",
+      "cue": "looking dejectedly at the camera",
+      "variant_index": 2,
+      "mood": "sad"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+[submodule "InstantCharacter"]
+	path = InstantCharacter
+	url = https://github.com/Tencent-Hunyuan/InstantCharacter.git

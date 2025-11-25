@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model InteractionLog {
+  id              String   @id @default(cuid())
+  timestamp       DateTime @default(now())
+  userId          String
+  sessionId       String?
+  endpoint        String
+  method          String
+  statusCode      Int?
+  durationMs      Int?
+  requestBody     Json?
+  responseBody    Json?
+  errorMessage    String?
+  keyframeUuid    String?
+  spriteVersion   String?
+  userAgent       String?
+  ipAddress       String?
+  
+  @@map("interaction_logs")
+}
+
+model Session {
+  id              String   @id @default(cuid())
+  userId          String
+  startedAt       DateTime @default(now())
+  endedAt         DateTime?
+  keyframesServed Int      @default(0)
+  active          Boolean  @default(true)
+  
+  @@map("sessions")
+}
