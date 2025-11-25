@@ -70,12 +70,19 @@ if [ -f .gitmodules ]; then
     git submodule update --init --recursive
 fi
 
-# Note: local-demo should be committed in the ten-framework submodule
-# If it doesn't exist, we need to create it (this is a workaround)
-if [ ! -d "ten_demo/ten-framework/ai_agents/agents/examples/local-demo" ]; then
-    echo "WARNING: local-demo directory not found in ten-framework submodule"
-    echo "This should be committed to the ten-framework repo or copied manually"
+# Check if ten-framework submodule has our custom extensions
+# If not, we need to apply them (they're in a local commit)
+cd ten_demo/ten-framework
+if ! git log --oneline | grep -q "Add local model extensions"; then
+    echo "Applying custom extensions to ten-framework..."
+    # The extensions should be in the submodule commit referenced by parent
+    # If they're not, we'll need to recreate them
+    if [ ! -d "ai_agents/agents/ten_packages/extension/whisper_asr_python" ]; then
+        echo "WARNING: Custom extensions not found in ten-framework submodule"
+        echo "They may need to be manually applied or the submodule commit updated"
+    fi
 fi
+cd ../..
 
 # Verify the directory exists
 if [ ! -d "ten_demo/ten-framework/ai_agents/agents/examples/local-demo" ]; then
