@@ -58,25 +58,10 @@ git checkout "$BRANCH" 2>/dev/null || git checkout -b "$BRANCH" "origin/$BRANCH"
 echo "Resetting to origin/$BRANCH..."
 git reset --hard "origin/$BRANCH"
 
-# Initialize submodules if needed (skip ten-framework as it's not in .gitmodules)
+# Initialize and update submodules
 if [ -f .gitmodules ]; then
     echo "Initializing submodules..."
-    git submodule update --init --recursive 2>&1 | grep -v "ten-framework" || true
-fi
-
-echo "Checking TEN framework..."
-if [ ! -d "ten_demo/ten-framework" ]; then
-    echo "TEN framework not found, cloning..."
-    mkdir -p ten_demo
-    cd ten_demo
-    git clone https://github.com/TEN-framework/ten-framework.git
-    cd ..
-elif [ -d "ten_demo/ten-framework/.git" ]; then
-    echo "TEN framework exists, updating..."
-    cd ten_demo/ten-framework
-    git fetch origin
-    git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null || true
-    cd ../..
+    git submodule update --init --recursive
 fi
 
 # Verify the directory exists
@@ -85,9 +70,8 @@ if [ ! -d "ten_demo/ten-framework/ai_agents/agents/examples/local-demo" ]; then
     echo "Current directory: \$(pwd)"
     echo "Contents of ten_demo:"
     ls -la ten_demo/ 2>&1 || echo "ten_demo doesn't exist"
-    echo "Trying to create local-demo directory..."
-    mkdir -p ten_demo/ten-framework/ai_agents/agents/examples/local-demo
-    echo "Please ensure ten-framework is properly cloned and local-demo exists"
+    echo "Submodule status:"
+    git submodule status 2>&1
     exit 1
 fi
 
