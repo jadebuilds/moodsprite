@@ -24,19 +24,37 @@ git push origin "$BRANCH"
 echo "Deploying to neshemet..."
 ssh neshemet bash <<EOF
 set -e
-cd /home/jade/Git/moodsprite
+
+# Try to find moodsprite repo or clone it
+if [ ! -d ~/moodsprite ]; then
+    echo "moodsprite repo not found, cloning..."
+    cd ~
+    git clone git@github.com:jadebuilds/moodsprite.git || git clone https://github.com/jadebuilds/moodsprite.git
+fi
+
+cd ~/moodsprite
 
 echo "Fetching latest changes..."
 git fetch origin
 
+echo "Checking out branch: $BRANCH"
+git checkout "$BRANCH" 2>/dev/null || git checkout -b "$BRANCH" "origin/$BRANCH"
+
 echo "Resetting to origin/$BRANCH..."
 git reset --hard "origin/$BRANCH"
+
+# Initialize submodules if needed
+if [ -f .gitmodules ]; then
+    echo "Initializing submodules..."
+    git submodule update --init --recursive || true
+fi
 
 echo "Navigating to TEN demo directory..."
 cd ten_demo/ten-framework/ai_agents/agents/examples/local-demo
 
 echo "Stopping any existing task processes..."
 pkill -f "task run" || true
+pkill -f "tman" || true
 sleep 2
 
 echo "Starting TEN agent in background..."
