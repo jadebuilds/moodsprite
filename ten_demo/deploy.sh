@@ -58,6 +58,12 @@ git checkout "$BRANCH" 2>/dev/null || git checkout -b "$BRANCH" "origin/$BRANCH"
 echo "Resetting to origin/$BRANCH..."
 git reset --hard "origin/$BRANCH"
 
+# Clean up any existing ten-framework directory that's not a submodule
+if [ -d "ten_demo/ten-framework" ] && [ ! -f "ten_demo/ten-framework/.git" ]; then
+    echo "Removing old ten-framework directory..."
+    rm -rf ten_demo/ten-framework
+fi
+
 # Initialize and update submodules
 if [ -f .gitmodules ]; then
     echo "Initializing submodules..."
