@@ -3,28 +3,37 @@ set -e
 
 # Get current branch name
 BRANCH=$(git branch --show-current)
+if [ -z "$BRANCH" ]; then
+    echo "ERROR: Not on a branch (detached HEAD). Please checkout a branch first."
+    exit 1
+fi
 echo "Current branch: $BRANCH"
 
 # Get the repo root (moodsprite)
 REPO_ROOT=$(git rev-parse --show-toplevel)
 cd "$REPO_ROOT"
 
-# Check if there are uncommitted changes
-if ! git diff-index --quiet HEAD --; then
-    echo "Uncommitted changes detected. Squashing onto previous commit..."
-    git add -A
-    git commit --amend --no-edit
+# Check if we're in the middle of a rebase/merge
+if [ -d ".git/rebase-merge" ] || [ -d ".git/rebase-apply" ] || [ -f ".git/MERGE_HEAD" ]; then
+    echo "ERROR: Git operation in progress. Please complete or abort it first."
+    exit 1
 fi
 
-# Push to remote (force push if needed for deployment)
-echo "Pushing to remote..."
-if ! git push origin "$BRANCH" 2>&1 | grep -q "rejected"; then
-    echo "Push successful"
-else
-    echo "Push rejected, pulling first..."
-    git pull --rebase origin "$BRANCH" || true
-    git push origin "$BRANCH" || git push --force-with-lease origin "$BRANCH"
+# Check if there are uncommitted changes
+if ! git diff-index --quiet HEAD --; then
+    echo "WARNING: Uncommitted changes detected."
+    echo "Please commit or stash your changes before deploying."
+    echo "To commit: git add -A && git commit -m 'Your message'"
+    exit 1
 fi
+
+# Push to remote
+echo "Pushing to remote..."
+git push origin "$BRANCH" || {
+    echo "Push failed. Attempting to pull and merge..."
+    git pull origin "$BRANCH"
+    git push origin "$BRANCH"
+}
 
 # SSH into neshemet and deploy
 echo "Deploying to neshemet..."
