@@ -11,14 +11,20 @@ cd "$REPO_ROOT"
 
 # Check if there are uncommitted changes
 if ! git diff-index --quiet HEAD --; then
-    echo "Uncommitted changes detected. Committing..."
+    echo "Uncommitted changes detected. Squashing onto previous commit..."
     git add -A
-    git commit -m "Deploy: Update TEN demo with local models"
+    git commit --amend --no-edit
 fi
 
-# Push to remote
+# Push to remote (force push if needed for deployment)
 echo "Pushing to remote..."
-git push origin "$BRANCH"
+if ! git push origin "$BRANCH" 2>&1 | grep -q "rejected"; then
+    echo "Push successful"
+else
+    echo "Push rejected, pulling first..."
+    git pull --rebase origin "$BRANCH" || true
+    git push origin "$BRANCH" || git push --force-with-lease origin "$BRANCH"
+fi
 
 # SSH into neshemet and deploy
 echo "Deploying to neshemet..."
