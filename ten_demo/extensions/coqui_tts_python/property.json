@@ -1,0 +1,6 @@
+{
+    "model_name": "tts_models/en/ljspeech/tacotron2-DDC",
+    "language": "en",
+    "sample_rate": 22050,
+    "device": "cpu"
+}

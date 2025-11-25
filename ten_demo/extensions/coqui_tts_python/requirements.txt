@@ -1,0 +1,4 @@
+TTS
+torch
+torchaudio
+numpy

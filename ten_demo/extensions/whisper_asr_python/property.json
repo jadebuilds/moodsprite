@@ -1,0 +1,8 @@
+{
+    "model": "base",
+    "language": "en",
+    "sample_rate": 16000,
+    "device": "cpu",
+    "task": "transcribe",
+    "chunk_length_s": 30
+}
