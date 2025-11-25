@@ -70,12 +70,19 @@ if [ -f .gitmodules ]; then
     git submodule update --init --recursive
 fi
 
+# Note: local-demo should be committed in the ten-framework submodule
+# If it doesn't exist, we need to create it (this is a workaround)
+if [ ! -d "ten_demo/ten-framework/ai_agents/agents/examples/local-demo" ]; then
+    echo "WARNING: local-demo directory not found in ten-framework submodule"
+    echo "This should be committed to the ten-framework repo or copied manually"
+fi
+
 # Verify the directory exists
 if [ ! -d "ten_demo/ten-framework/ai_agents/agents/examples/local-demo" ]; then
     echo "ERROR: TEN demo directory not found!"
     echo "Current directory: \$(pwd)"
-    echo "Contents of ten_demo:"
-    ls -la ten_demo/ 2>&1 || echo "ten_demo doesn't exist"
+    echo "Contents of ten_demo/ten-framework/ai_agents/agents/examples/:"
+    ls -la ten_demo/ten-framework/ai_agents/agents/examples/ 2>&1 | head -20
     echo "Submodule status:"
     git submodule status 2>&1
     exit 1
