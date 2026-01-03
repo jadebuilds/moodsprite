@@ -26,7 +26,7 @@ depicts Sera as a character in-universe in Yokohama Kaidashi Kikou. Cuteness,
 in my humble opinion, is essential to achieving post-capitalism!
 
 
-# Character
+## Character
 
 Full name: SERA (pronounced Seh-ra), short for SLR-9 “Soft Liaison, Reflective” model.
 Model line: Experimental empathic interface android developed by a pre-collapse research institute in Yokosuka — same region as Alpha’s café. The R-series was designed to mediate between autonomous systems and human social collectives, trained on archival human communications from the early 21st century (forums, chat logs, meeting transcripts).
