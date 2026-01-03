@@ -1,5 +1,19 @@
 # Sera: moodsprite's moodsprite
 
+# Todo: port to Time of Eve
+
+I've discovered the old "Time of Eve" androids and I like them a lot more as
+direct visual metaphors (I'm thinking SLR-x series gets a teal band 🤓 haven't
+figured out how well accepted vs. underground they are in this setting)
+
+Anyway Sera is a little too booby for me right now (yuck anime tropes) and I think
+Time of Eve will give us a better aesthetic tone / vibes more specific to a
+service-role moodsprite (explains the framework technically + helps adopt).
+
+
+# Archive: Yokohama Kaidashi Kikou
+
+
 The moodsprite homepage is a custom moodsprite which offers explanations
 of moodsprite library and attempts to help developers adopt it.
 
