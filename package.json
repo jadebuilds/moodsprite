@@ -1,0 +1,14 @@
+{
+  "name": "zeroclaw",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm run build --workspace=sdk",
+    "build:agents": "tsc -p agents/tsconfig.json",
+    "dev": "npm run dev --workspace=sdk"
+  },
+  "workspaces": [
+    "sdk"
+  ]
+}

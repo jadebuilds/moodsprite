@@ -3,6 +3,15 @@
 */.DS_Store
 **/.DS_Store
 
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Zeroclaw
+data/signal/
+.env
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -210,3 +219,6 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Local sandbox / scratch
+sandbox/
