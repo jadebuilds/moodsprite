@@ -18,9 +18,6 @@ COPY sdk/src/ ./sdk/src/
 COPY package.json ./
 RUN npm install && npm run build
 
-# Install tsx for running agent TypeScript directly
-RUN npm install -g tsx
-
 # Copy agent code
 COPY agents/tsconfig.json ./agents/
 COPY agents/${AGENT_NAME}/ ./agents/${AGENT_NAME}/

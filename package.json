@@ -8,6 +8,9 @@
     "build:agents": "tsc -p agents/tsconfig.json",
     "dev": "npm run dev --workspace=sdk"
   },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  },
   "workspaces": [
     "sdk"
   ]
