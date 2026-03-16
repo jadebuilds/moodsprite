@@ -1,8 +1,17 @@
-FROM zeroclaw:dev
+FROM ghcr.io/zeroclaw-labs/zeroclaw:latest AS zeroclaw-bin
+
+FROM debian:trixie-slim
 ARG AGENT_NAME
-USER root
-RUN apt-get update && apt-get install -y --no-install-recommends python3 gettext-base \
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates curl python3 gettext-base \
     && rm -rf /var/lib/apt/lists/*
+
+COPY --from=zeroclaw-bin /usr/local/bin/zeroclaw /usr/local/bin/zeroclaw
+
+ENV LANG=C.UTF-8
+ENV HOME=/zeroclaw-data
+
 COPY workspaces/${AGENT_NAME}/ /workspace/
 COPY configs/${AGENT_NAME}.toml /workspace/config.template.toml
 COPY scripts/agent-entry.sh /usr/local/bin/agent-entry.sh
