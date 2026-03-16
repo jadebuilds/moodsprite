@@ -29,28 +29,16 @@ services:
     restart: unless-stopped
 
   # --- Signal CLI instances ---
-  # Matching proven config from openclaw: custom command, user 1000:1000,
-  # --receive-mode=on-start, --send-read-receipts
+  # Using bbernhard REST API mode (MODE=normal) — provides /v1/receive, /v2/send
+  # that the Zeroclaw SDK SignalClient expects.
   signal-ghostwheel:
     image: bbernhard/signal-cli-rest-api:latest
     container_name: signal-ghostwheel
     networks: [zeroclaw]
     ports:
-      - "127.0.0.1:8081:8080"
-    entrypoint: []
-    command:
-      - signal-cli
-      - --config
-      - /home/.local/share/signal-cli
-      - -a
-      - "${GHOSTWHEEL_PHONE}"
-      - daemon
-      - --http
-      - 0.0.0.0:8080
-      - --receive-mode=on-start
-      - --no-receive-stdout
-      - --send-read-receipts
-    user: "1000:1000"
+      - "127.0.0.1:8084:8080"
+    environment:
+      - MODE=normal
     volumes:
       - ./data/signal/ghostwheel:/home/.local/share/signal-cli
     deploy:
@@ -66,20 +54,8 @@ services:
     networks: [zeroclaw]
     ports:
       - "127.0.0.1:8082:8080"
-    entrypoint: []
-    command:
-      - signal-cli
-      - --config
-      - /home/.local/share/signal-cli
-      - -a
-      - "${AYA_PHONE}"
-      - daemon
-      - --http
-      - 0.0.0.0:8080
-      - --receive-mode=on-start
-      - --no-receive-stdout
-      - --send-read-receipts
-    user: "1000:1000"
+    environment:
+      - MODE=normal
     volumes:
       - ./data/signal/aya:/home/.local/share/signal-cli
     deploy:
@@ -95,20 +71,8 @@ services:
     networks: [zeroclaw]
     ports:
       - "127.0.0.1:8083:8080"
-    entrypoint: []
-    command:
-      - signal-cli
-      - --config
-      - /home/.local/share/signal-cli
-      - -a
-      - "${ALASTAIR_PHONE}"
-      - daemon
-      - --http
-      - 0.0.0.0:8080
-      - --receive-mode=on-start
-      - --no-receive-stdout
-      - --send-read-receipts
-    user: "1000:1000"
+    environment:
+      - MODE=normal
     volumes:
       - ./data/signal/alastair:/home/.local/share/signal-cli
     deploy:
