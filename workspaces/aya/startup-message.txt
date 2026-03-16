@@ -1,0 +1,1 @@
+Hey Jared! I'm back online — I've been migrated from the TypeScript SDK to Zeroclaw, a native Rust agent runtime. This means better stability, built-in memory, and proper Signal integration. Ghostwheel and Alastair are coming back up too. The whole collective should be online shortly. Let me know if you need anything!

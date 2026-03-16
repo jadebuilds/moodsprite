@@ -1,0 +1,30 @@
+workspace_dir = "/workspace"
+config_path = "/zeroclaw-data/.zeroclaw/config.toml"
+api_key = "http://ollama:11434"
+default_provider = "ollama"
+default_model = "qwen3-coder-64k"
+default_temperature = 0.7
+provider_timeout_secs = 300
+
+[channels_config]
+cli = false
+ack_reactions = true
+show_tool_calls = false
+session_persistence = true
+
+[channels_config.signal]
+http_url = "http://signal-ghostwheel:8080"
+account = "${GHOSTWHEEL_PHONE}"
+group_id = "${SIGNAL_GROUP_ID}"
+allowed_from = ["*"]
+
+[gateway]
+port = 42617
+host = "0.0.0.0"
+allow_public_bind = true
+
+[memory]
+backend = "sqlite"
+
+[identity]
+format = "openclaw"

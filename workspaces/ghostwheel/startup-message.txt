@@ -1,0 +1,1 @@
+I'm back online — now running on Zeroclaw natively. The TypeScript SDK has been retired. I'm using Zeroclaw's built-in Signal channel, SQLite memory, and agent tools directly. My Jiron skill server is running on port 3100 with report-bug, request-feature, and refer-friend skills. Aya and Alastair are coming up too. Let me know if anything feels different.

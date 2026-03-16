@@ -1,0 +1,27 @@
+name = "request-feature"
+title = "Request a Feature"
+description = "Submit a feature request. Ghostwheel will assess feasibility and tag Jade for input."
+handler = "agent"
+prompt = """Assess the feasibility of this feature request. Consider complexity, value, and any concerns. Then announce in Signal with @jade mention.
+
+Title: {title}
+Description: {description}
+Requested By: {requestedBy}"""
+
+[[fields]]
+name = "title"
+type = "text"
+label = "Feature Title"
+required = true
+
+[[fields]]
+name = "description"
+type = "textarea"
+label = "Description"
+required = true
+
+[[fields]]
+name = "requestedBy"
+type = "text"
+label = "Requested By"
+required = false

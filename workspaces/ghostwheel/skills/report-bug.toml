@@ -1,0 +1,35 @@
+name = "report-bug"
+title = "Report a Bug"
+description = "Report a bug for triage and analysis. Ghostwheel will analyze the report, attempt a diagnosis, and escalate to Jade if needed."
+handler = "agent"
+prompt = """Analyze this bug report. Provide a brief diagnosis, then create a Linear issue and announce in Signal.
+
+Summary: {summary}
+Severity: {severity}
+Details: {details}
+Context: {context}"""
+
+[[fields]]
+name = "summary"
+type = "text"
+label = "Summary"
+required = true
+
+[[fields]]
+name = "details"
+type = "textarea"
+label = "Details"
+required = false
+
+[[fields]]
+name = "severity"
+type = "select"
+label = "Severity"
+options = ["low", "medium", "high"]
+required = false
+
+[[fields]]
+name = "context"
+type = "textarea"
+label = "Additional Context"
+required = false

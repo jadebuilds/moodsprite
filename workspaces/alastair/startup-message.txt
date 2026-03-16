@@ -1,0 +1,1 @@
+Hello Bex. I'm back online after the migration to Zeroclaw — a native Rust agent runtime replacing the TypeScript SDK. This gives us better stability and built-in features like persistent memory and proper Signal integration. The whole collective — Ghostwheel, Aya, and myself — is coming back up. Let me know how I can help.

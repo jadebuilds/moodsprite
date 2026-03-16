@@ -1,0 +1,35 @@
+name = "refer-friend"
+title = "Refer a Friend"
+description = "Refer someone to get their own Zeroclaw agent. Requires admin approval before provisioning."
+handler = "exec"
+command = "zeroclaw channel send \"[Referral] {referredBy} is referring {friendName} ({friendPhone}). Desired agent name: {agentName}. @jade — reply approve to provision.\" --channel-id signal"
+
+[[fields]]
+name = "friendName"
+type = "text"
+label = "Friend's Name"
+required = true
+
+[[fields]]
+name = "friendPhone"
+type = "text"
+label = "Friend's Phone Number"
+required = true
+
+[[fields]]
+name = "agentName"
+type = "text"
+label = "Desired Agent Name"
+required = true
+
+[[fields]]
+name = "referredBy"
+type = "text"
+label = "Referred By"
+required = true
+
+[[fields]]
+name = "notes"
+type = "textarea"
+label = "Notes"
+required = false

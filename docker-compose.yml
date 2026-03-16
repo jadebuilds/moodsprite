@@ -28,17 +28,23 @@ services:
               capabilities: [gpu]
     restart: unless-stopped
 
-  # --- Signal CLI instances ---
-  # Using bbernhard REST API mode (MODE=normal) — provides /v1/receive, /v2/send
-  # that the Zeroclaw SDK SignalClient expects.
+  # --- Signal CLI daemons ---
   signal-ghostwheel:
     image: bbernhard/signal-cli-rest-api:latest
     container_name: signal-ghostwheel
     networks: [zeroclaw]
     ports:
       - "127.0.0.1:8084:8080"
-    environment:
-      - MODE=normal
+    entrypoint: []
+    command:
+      - signal-cli
+      - "--config"
+      - "/home/.local/share/signal-cli"
+      - "-a"
+      - "${GHOSTWHEEL_PHONE}"
+      - "daemon"
+      - "--http"
+      - "0.0.0.0:8080"
     volumes:
       - ./data/signal/ghostwheel:/home/.local/share/signal-cli
     deploy:
@@ -54,8 +60,16 @@ services:
     networks: [zeroclaw]
     ports:
       - "127.0.0.1:8082:8080"
-    environment:
-      - MODE=normal
+    entrypoint: []
+    command:
+      - signal-cli
+      - "--config"
+      - "/home/.local/share/signal-cli"
+      - "-a"
+      - "${AYA_PHONE}"
+      - "daemon"
+      - "--http"
+      - "0.0.0.0:8080"
     volumes:
       - ./data/signal/aya:/home/.local/share/signal-cli
     deploy:
@@ -71,8 +85,16 @@ services:
     networks: [zeroclaw]
     ports:
       - "127.0.0.1:8083:8080"
-    environment:
-      - MODE=normal
+    entrypoint: []
+    command:
+      - signal-cli
+      - "--config"
+      - "/home/.local/share/signal-cli"
+      - "-a"
+      - "${ALASTAIR_PHONE}"
+      - "daemon"
+      - "--http"
+      - "0.0.0.0:8080"
     volumes:
       - ./data/signal/alastair:/home/.local/share/signal-cli
     deploy:
@@ -86,16 +108,18 @@ services:
   ghostwheel:
     build:
       context: .
+      dockerfile: Dockerfile.agent
       args:
         AGENT_NAME: ghostwheel
     container_name: ghostwheel
     networks: [zeroclaw]
     ports:
       - "127.0.0.1:3100:3100"
+      - "127.0.0.1:42617:42617"
     env_file: .env
     environment:
-      SIGNAL_API_URL_GHOSTWHEEL: http://signal-ghostwheel:8080
-      OLLAMA_URL: http://ollama:11434
+      JIRON_PORT: "3100"
+      LINEAR_API_KEY: "${LINEAR_API_KEY}"
     depends_on:
       - ollama
       - signal-ghostwheel
@@ -104,16 +128,17 @@ services:
   aya:
     build:
       context: .
+      dockerfile: Dockerfile.agent
       args:
         AGENT_NAME: aya
     container_name: aya
     networks: [zeroclaw]
     ports:
       - "127.0.0.1:3200:3200"
+      - "127.0.0.1:42618:42617"
     env_file: .env
     environment:
-      SIGNAL_API_URL_AYA: http://signal-aya:8080
-      OLLAMA_URL: http://ollama:11434
+      JIRON_PORT: "3200"
     depends_on:
       - ollama
       - signal-aya
@@ -122,16 +147,17 @@ services:
   alastair:
     build:
       context: .
+      dockerfile: Dockerfile.agent
       args:
         AGENT_NAME: alastair
     container_name: alastair
     networks: [zeroclaw]
     ports:
       - "127.0.0.1:3300:3300"
+      - "127.0.0.1:42619:42617"
     env_file: .env
     environment:
-      SIGNAL_API_URL_ALASTAIR: http://signal-alastair:8080
-      OLLAMA_URL: http://ollama:11434
+      JIRON_PORT: "3300"
     depends_on:
       - ollama
       - signal-alastair
