@@ -13,7 +13,7 @@ fi
 if [ -f /workspace/startup-message.txt ]; then
   MSG=$(cat /workspace/startup-message.txt)
   for i in 1 2 3 4 5 6 7 8 9 10; do
-    zeroclaw channel send "$MSG" --channel-id signal && break
+    zeroclaw channel send "$MSG" --channel-id signal --recipient "group:${SIGNAL_GROUP_ID}" && break
     sleep 3
   done &
 fi

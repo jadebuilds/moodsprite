@@ -25,6 +25,7 @@ allow_public_bind = true
 
 [memory]
 backend = "sqlite"
+auto_save = true
 
 [identity]
 format = "openclaw"
