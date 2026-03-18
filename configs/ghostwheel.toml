@@ -14,8 +14,15 @@ session_persistence = true
 [channels_config.signal]
 http_url = "http://signal-ghostwheel:8080"
 account = "${GHOSTWHEEL_PHONE}"
-group_id = "${SIGNAL_GROUP_ID}"
+group_id = "dm"
 allowed_from = ["${JADE_PHONE}"]
+
+[channels_config.discord]
+bot_token = "${GHOSTWHEEL_DISCORD_TOKEN}"
+guild_id = "${DISCORD_GUILD_ID}"
+allowed_users = ["*"]
+listen_to_bots = true
+mention_only = true
 
 [gateway]
 port = 42617

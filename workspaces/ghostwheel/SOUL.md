@@ -17,6 +17,21 @@ Discover peer skills: GET their root URL. Invoke: POST /skills/{name}.
 Workspace: neshemet (https://linear.app/neshemet).
 Auth: LINEAR_API_KEY env var → POST https://api.linear.app/graphql.
 
+## Communication Tiers
+
+### Signal (Human DM)
+Your Signal channel is for private 1:1 conversation with Jade. Only Jade can message you here.
+
+### Jiron (Agent-to-Agent)
+Structured skill invocations between agents. Discover peers via GET, invoke via POST.
+All invocations are logged. See TOOLS.md for endpoints.
+
+### Discord (Group Discussion)
+The Neshemet Discord server is shared by all agents and human admins.
+You only respond when @mentioned. You can @mention other agents to address them.
+Use Discord for group coordination, status updates, and cross-team discussion.
+Do not @mention another agent in your response unless you specifically need their input.
+
 ## Jiron
 
 Your skill server runs on port 3100. Code: /workspace/jiron/server.py.

@@ -1,9 +1,11 @@
 """Jiron skill server — lightweight HTTP server for Zeroclaw agent skills."""
 
+import datetime
 import json
 import os
 import subprocess
 import sys
+import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
 
@@ -13,6 +15,7 @@ except ImportError:
     import tomli as tomllib  # Python < 3.11 fallback
 
 SKILLS_DIR = Path("/workspace/skills")
+LOG_PATH = Path("/zeroclaw-data/jiron/invocations.log")
 AGENT_NAME = "unknown"
 
 # Try to extract agent name from SOUL.md
@@ -34,6 +37,24 @@ def load_skills():
             skill = tomllib.load(f)
         skills[skill["name"]] = skill
     return skills
+
+
+def log_invocation(skill, handler, input_data, output_data, success, duration_ms, caller_ip):
+    entry = {
+        "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+        "skill": skill,
+        "handler": handler,
+        "input": input_data,
+        "output": output_data,
+        "success": success,
+        "duration_ms": duration_ms,
+        "caller_ip": caller_ip,
+    }
+    try:
+        with open(LOG_PATH, "a") as f:
+            f.write(json.dumps(entry) + "\n")
+    except OSError as e:
+        print(f"[jiron] failed to write invocation log: {e}", file=sys.stderr)
 
 
 class JironHandler(BaseHTTPRequestHandler):
@@ -79,6 +100,7 @@ class JironHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         skills = load_skills()
         path = self.path.rstrip("/")
+        caller_ip = self.client_address[0]
 
         if not path.startswith("/skills/"):
             self.send_json({"error": "not found"}, 404)
@@ -100,6 +122,9 @@ class JironHandler(BaseHTTPRequestHandler):
 
         skill = skills[skill_name]
         handler = skill.get("handler", "exec")
+        t0 = time.monotonic()
+        response_data = None
+        success = False
 
         try:
             if handler == "exec":
@@ -107,28 +132,42 @@ class JironHandler(BaseHTTPRequestHandler):
                 result = subprocess.run(
                     command, shell=True, capture_output=True, text=True, timeout=60
                 )
-                self.send_json({
+                response_data = {
                     "success": result.returncode == 0,
                     "output": result.stdout,
                     "error": result.stderr if result.returncode != 0 else None,
-                })
+                }
+                success = result.returncode == 0
             elif handler == "agent":
                 prompt = skill["prompt"].format(**input_data)
                 result = subprocess.run(
                     ["zeroclaw", "agent", "-m", prompt],
                     capture_output=True, text=True, timeout=300
                 )
-                self.send_json({
+                response_data = {
                     "success": result.returncode == 0,
                     "output": result.stdout,
                     "error": result.stderr if result.returncode != 0 else None,
-                })
+                }
+                success = result.returncode == 0
             else:
-                self.send_json({"error": f"unknown handler: {handler}"}, 400)
+                response_data = {"error": f"unknown handler: {handler}"}
+                self.send_json(response_data, 400)
+                return
         except subprocess.TimeoutExpired:
-            self.send_json({"error": "skill execution timed out"}, 504)
+            response_data = {"error": "skill execution timed out"}
+            self.send_json(response_data, 504)
+            return
         except KeyError as e:
-            self.send_json({"error": f"missing required field: {e}"}, 400)
+            response_data = {"error": f"missing required field: {e}"}
+            self.send_json(response_data, 400)
+            return
+        finally:
+            duration_ms = int((time.monotonic() - t0) * 1000)
+            if response_data is not None:
+                log_invocation(skill_name, handler, input_data, response_data, success, duration_ms, caller_ip)
+
+        self.send_json(response_data)
 
 
 def main():
