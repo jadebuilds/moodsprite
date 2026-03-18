@@ -15,7 +15,7 @@ session_persistence = true
 http_url = "http://signal-alastair:8080"
 account = "${ALASTAIR_PHONE}"
 group_id = "${SIGNAL_GROUP_ID}"
-allowed_from = ["*"]
+allowed_from = ["${BEX_PHONE}"]
 
 [gateway]
 port = 42617

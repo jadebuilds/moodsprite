@@ -15,7 +15,7 @@ session_persistence = true
 http_url = "http://signal-ghostwheel:8080"
 account = "${GHOSTWHEEL_PHONE}"
 group_id = "${SIGNAL_GROUP_ID}"
-allowed_from = ["*"]
+allowed_from = ["${JADE_PHONE}"]
 
 [gateway]
 port = 42617

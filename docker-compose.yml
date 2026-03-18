@@ -121,6 +121,7 @@ services:
       JIRON_PORT: "3100"
       LINEAR_API_KEY: "${LINEAR_API_KEY}"
       SIGNAL_HTTP_URL: "http://signal-ghostwheel:8080"
+      ZEROCLAW_MODEL: "qwen3-coder-64k"
     depends_on:
       - ollama
       - signal-ghostwheel
@@ -141,6 +142,7 @@ services:
     environment:
       JIRON_PORT: "3200"
       SIGNAL_HTTP_URL: "http://signal-aya:8080"
+      ZEROCLAW_MODEL: "qwen3-coder-64k"
     depends_on:
       - ollama
       - signal-aya
@@ -161,6 +163,7 @@ services:
     environment:
       JIRON_PORT: "3300"
       SIGNAL_HTTP_URL: "http://signal-alastair:8080"
+      ZEROCLAW_MODEL: "qwen3-coder-64k"
     depends_on:
       - ollama
       - signal-alastair
