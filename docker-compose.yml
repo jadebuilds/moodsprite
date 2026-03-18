@@ -120,6 +120,7 @@ services:
     environment:
       JIRON_PORT: "3100"
       LINEAR_API_KEY: "${LINEAR_API_KEY}"
+      SIGNAL_HTTP_URL: "http://signal-ghostwheel:8080"
     depends_on:
       - ollama
       - signal-ghostwheel
@@ -139,6 +140,7 @@ services:
     env_file: .env
     environment:
       JIRON_PORT: "3200"
+      SIGNAL_HTTP_URL: "http://signal-aya:8080"
     depends_on:
       - ollama
       - signal-aya
@@ -158,6 +160,7 @@ services:
     env_file: .env
     environment:
       JIRON_PORT: "3300"
+      SIGNAL_HTTP_URL: "http://signal-alastair:8080"
     depends_on:
       - ollama
       - signal-alastair
